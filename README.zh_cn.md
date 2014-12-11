@@ -1,5 +1,7 @@
 # ElasticSync
 
+[README in English](README.md)
+
 ElasticSearch 同步工具 by [ZoomEye](http://www.zoomeye.org)
 
 跨主机复制 ElasticSearch 所有索引的映射和设置到本地开发环境，同时拉取部分测试数据，便于开发和测试。

@@ -1,5 +1,7 @@
 # ElasticSync
 
+[中文说明](README.zh_cn.md)
+
 Transport ElasticSearch data from remote server to local, for development and testing.
 
 ## Usage
