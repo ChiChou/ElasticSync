@@ -10,7 +10,7 @@ ElasticSync transports data between ElasticSearch instances. A valid data source
 
 You can sync data from 192.168.1.1:9200 to localhost:9200 using following command:
 
-    node elasticsync.js --src=192.168.1.1:9200 --dest=localhost:9200
+> node elasticsync.js --src=192.168.1.1:9200 --dest=localhost:9200
 
 ## Options
 
