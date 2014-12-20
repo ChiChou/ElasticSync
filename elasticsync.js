@@ -102,6 +102,7 @@ clientSource.indices.getMapping({requestTimeout: 15000}, function(err, indices) 
       async.eachLimit(types, 3, function(type, nextSearch) {
         clientSource.search({
           index: indexName,
+          type: type,
           body: {
             from: 0,
             size: limit,
@@ -116,9 +117,16 @@ clientSource.indices.getMapping({requestTimeout: 15000}, function(err, indices) 
               return {index: {_index: indexName, _type: type, _id: doc._id}};
             };
 
+            var hits = res.hits.hits;
+
+            if (!hits.length) {
+              nextSearch();
+              return;
+            }
+
             // bulk save to destination
             clientDestination.bulk({
-              body: res.hits.hits.reduce(function(prev, current) {
+              body: hits.reduce(function(prev, current) {
                 if (Array.isArray(prev)) {
                   return prev.concat([_wrap(current), current._source]);
                 } else {
@@ -135,7 +143,7 @@ clientSource.indices.getMapping({requestTimeout: 15000}, function(err, indices) 
               }
               setTimeout(function() {
                 nextSearch(err);
-              }, 400);
+              }, 40);
             });
           }
         });
