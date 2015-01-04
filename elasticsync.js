@@ -113,10 +113,6 @@ clientSource.indices.getMapping({requestTimeout: 15000}, function(err, indices) 
             // raise error
             nextSearch(err);
           } else {
-            var _wrap = function(doc) {
-              return {index: {_index: indexName, _type: type, _id: doc._id}};
-            };
-
             var hits = res.hits.hits;
 
             if (!hits.length) {
@@ -127,15 +123,14 @@ clientSource.indices.getMapping({requestTimeout: 15000}, function(err, indices) 
             // bulk save to destination
             clientDestination.bulk({
               body: hits.reduce(function(prev, current) {
-                if (Array.isArray(prev)) {
-                  return prev.concat([_wrap(current), current._source]);
-                } else {
-                  return [
-                    _wrap(prev), prev._source,
-                    _wrap(current), current._source
-                  ];
-                }
-              })
+                return prev.concat([{
+                  index: {
+                    _index: indexName,
+                    _type: type,
+                    _id: current._id
+                  }
+                }, current._source]);
+              }, [])
             }, function (err, res) {
               if (!err) {
                 console.log('Transported ' + res.items.length + ' items from '
